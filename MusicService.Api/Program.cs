@@ -1,39 +1,40 @@
+using Microsoft.AspNetCore.Mvc;
+using MusicService.Api.Middlewares;
+using MusicService.Api.Models;
+using MusicService.Api.Services;
+using MusicService.Api.Services.BackgroundServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSingleton<IMusicCatalog, InMemoryMusicCatalog>();
+builder.Services.AddHostedService<CatalogScannerService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseMiddleware<RequestTimingMiddleware>();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/songs", async (IMusicCatalog catalog, CancellationToken ct) => await catalog.GetAllAsync(ct));
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/songs/{id:guid}", async ([FromRoute] Guid id, IMusicCatalog catalog, CancellationToken ct) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var song = await catalog.GetAsync(id, ct);
+    if (song is null) return Results.NotFound();
+    return Results.Ok(song);
+});
+
+app.MapPost("/songs", async ([FromBody] Song song, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger) =>
+{
+    if (string.IsNullOrWhiteSpace(song.Title)) return Results.BadRequest($"{nameof(song.Title)} is required.");
+    if (!await catalog.AddAsync(song, ct)) return Results.Conflict($"ID \"{song.Id}\" is busy.");
+    logger.LogInformation("Song {SongId} added.", song.Id);
+    return Results.Created($"/songs/{song.Id}", song);
+});
+
+app.MapDelete("/songs/{id:guid}", async ([FromRoute] Guid id, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger) =>
+{
+    if (!await catalog.DeleteAsync(id, ct)) return Results.NotFound();
+    logger.LogInformation("Song {SongId} deleted.", id);
+    return Results.NoContent();
+});
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

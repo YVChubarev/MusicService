@@ -1,6 +1,71 @@
 @MusicService.Api_HostAddress = http://localhost:5095
 
-GET {{MusicService.Api_HostAddress}}/weatherforecast/
+### Получить все песни
+GET {{MusicService.Api_HostAddress}}/songs
 Accept: application/json
 
-###
+### Получить песню по ID (существующую)
+GET {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Получить песню по ID (несуществующую)
+GET {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### Добавить новую песню
+POST {{MusicService.Api_HostAddress}}/songs
+Content-Type: application/json
+
+{
+  "id": "00000000-0000-0000-0000-000000000003",
+  "title": "My New Song",
+  "mainArtists": ["Me"],
+  "audioStreamUrl": "https://example.com/me.mp3"
+}
+
+### Добавить новую песню (ID не задан)
+POST {{MusicService.Api_HostAddress}}/songs
+Content-Type: application/json
+
+{
+  "title": "My New Song 2",
+  "mainArtists": ["Me"],
+  "audioStreamUrl": "https://example.com/me2.mp3"
+}
+
+### Добавить новую песню (json сломан)
+POST {{MusicService.Api_HostAddress}}/songs
+Content-Type: application/json
+
+{
+  "title": "My New Song 2",
+  "mainArtists": ["Me],
+  "audioStreamUrl": "https://example.com/me2.mp3"
+}
+
+### Добавить песню без названия (проверка валидации)
+POST {{MusicService.Api_HostAddress}}/songs
+Content-Type: application/json
+
+{
+  "title": "",
+  "mainArtists": ["Me"],
+  "audioStreamUrl": "https://example.com/me3.mp3"
+}
+
+### Добавить новую песню (ID занят)
+POST {{MusicService.Api_HostAddress}}/songs
+Content-Type: application/json
+
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "title": "My New Song",
+  "mainArtists": ["Me"],
+  "audioStreamUrl": "https://example.com/me.mp3"
+}
+
+### Удалить песню по ID (существующую)
+DELETE {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000001
+
+### Удалить песню по ID (несуществующую)
+DELETE {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000000

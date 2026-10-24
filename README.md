@@ -1,1 +1,7 @@
-# MusicService.Api
+# MusicService
+
+Сервис для домашнего прослушивания музыки.
+
+## MusicService.Api
+
+Api для предоставления доступа к сервису.
