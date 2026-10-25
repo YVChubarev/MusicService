@@ -76,3 +76,7 @@ Content-Type: application/json
 
 Добавлен `Serilog`.
 Логирование ведётся в `logs/MusicService.Api/`
+
+### 1.0.2
+
+Перенос эндпоинтов.

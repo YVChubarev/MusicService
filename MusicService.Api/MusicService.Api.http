@@ -17,20 +17,9 @@ POST {{MusicService.Api_HostAddress}}/songs
 Content-Type: application/json
 
 {
-  "id": "00000000-0000-0000-0000-000000000003",
   "title": "My New Song",
   "mainArtists": ["Me"],
   "audioStreamUrl": "https://example.com/me.mp3"
-}
-
-### Добавить новую песню (ID не задан)
-POST {{MusicService.Api_HostAddress}}/songs
-Content-Type: application/json
-
-{
-  "title": "My New Song 2",
-  "mainArtists": ["Me"],
-  "audioStreamUrl": "https://example.com/me2.mp3"
 }
 
 ### Добавить новую песню (json сломан)
@@ -51,17 +40,6 @@ Content-Type: application/json
   "title": "",
   "mainArtists": ["Me"],
   "audioStreamUrl": "https://example.com/me3.mp3"
-}
-
-### Добавить новую песню (ID занят)
-POST {{MusicService.Api_HostAddress}}/songs
-Content-Type: application/json
-
-{
-  "id": "00000000-0000-0000-0000-000000000001",
-  "title": "My New Song",
-  "mainArtists": ["Me"],
-  "audioStreamUrl": "https://example.com/me.mp3"
 }
 
 ### Удалить песню по ID (существующую)
