@@ -1,19 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicService.Api.Contracts;
 using MusicService.Api.Mappings;
-using MusicService.Api.Middlewares;
 using MusicService.Api.Models;
 using MusicService.Api.Services;
 using MusicService.Api.Services.BackgroundServices;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Host.UseSerilog((context, loggerConfiguration) =>
+    loggerConfiguration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddSingleton<IMusicCatalog, InMemoryMusicCatalog>();
 builder.Services.AddHostedService<CatalogScannerService>();
 
 var app = builder.Build();
 
-app.UseMiddleware<RequestTimingMiddleware>();
+app.UseSerilogRequestLogging();
 
 app.MapGet("/songs", async (IMusicCatalog catalog, CancellationToken ct) => await catalog.GetAllAsync(ct));
 

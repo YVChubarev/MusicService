@@ -9,6 +9,7 @@
         /// <inheritdoc/>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            logger.LogInformation("Started.");
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
@@ -18,9 +19,14 @@
                 }
                 catch (OperationCanceledException)
                 {
-                    return;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning("Completed with {Exception}: {Message}.", ex.GetType().Name, ex.Message);
                 }
             }
+            logger.LogInformation("Stopped.");
         }
     }
 }

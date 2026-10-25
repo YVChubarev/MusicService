@@ -6,7 +6,7 @@
 
 * .NET 10 / ASP.NET Core (Minimal API)
 * Встроенный DI-контейнер
-* Структурированное логирование (ILogger)
+* Serilog (Console + File, rolling по дням)
 * Фоновые задачи (BackgroundService)
 
 ## Как запустить
@@ -71,3 +71,8 @@ Content-Type: application/json
 
 `POST /songs` принимает `SongCreateDto` вместо `Song`.
 `POST /songs` больше не возвращает `409 Conflict`
+
+### 1.0.1
+
+Добавлен `Serilog`.
+Логирование ведётся в `logs/MusicService.Api/`
