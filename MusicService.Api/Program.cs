@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MusicService.Api.Contracts;
+using MusicService.Api.Mappings;
 using MusicService.Api.Middlewares;
 using MusicService.Api.Models;
 using MusicService.Api.Services;
@@ -22,10 +24,11 @@ app.MapGet("/songs/{id:guid}", async ([FromRoute] Guid id, IMusicCatalog catalog
     return Results.Ok(song);
 });
 
-app.MapPost("/songs", async ([FromBody] Song song, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger) =>
+app.MapPost("/songs", async ([FromBody] SongCreateDto dto, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger) =>
 {
-    if (string.IsNullOrWhiteSpace(song.Title)) return Results.BadRequest($"{nameof(song.Title)} is required.");
-    if (!await catalog.AddAsync(song, ct)) return Results.Conflict($"ID \"{song.Id}\" is busy.");
+    if (string.IsNullOrWhiteSpace(dto.Title)) return Results.BadRequest($"{nameof(dto.Title)} is required.");
+    Song song = dto.ToDomain();
+    await catalog.AddAsync(song, ct);
     logger.LogInformation("Song {SongId} added.", song.Id);
     return Results.Created($"/songs/{song.Id}", song);
 });

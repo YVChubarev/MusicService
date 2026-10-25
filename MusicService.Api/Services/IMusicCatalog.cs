@@ -26,8 +26,7 @@ namespace MusicService.Api.Services
         /// </summary>
         /// <param name="song">Объект для добавления.</param>
         /// <param name="token">Токен отмены.</param>
-        /// <returns><c>true</c> если песня добавлена, иначе <c>false</c>.</returns>
-        Task<bool> AddAsync(Song song, CancellationToken token = default);
+        Task AddAsync(Song song, CancellationToken token = default);
 
         /// <summary>
         /// Удаляет песню из сервиса, если такая есть.

@@ -44,8 +44,11 @@ namespace MusicService.Api.Services
             Task.FromResult(_songs.TryGetValue(id, out var song) ? song : null);
 
         /// <inheritdoc/>
-        public Task<bool> AddAsync(Song song, CancellationToken token = default) =>
-            Task.FromResult(_songs.TryAdd(song.Id, song));
+        public Task AddAsync(Song song, CancellationToken token = default)
+        {
+            _songs[song.Id] = song;
+            return Task.CompletedTask;
+        }
 
         /// <inheritdoc/>
         public Task<bool> DeleteAsync(Guid id, CancellationToken token = default) =>
