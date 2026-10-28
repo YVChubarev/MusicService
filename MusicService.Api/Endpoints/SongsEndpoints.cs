@@ -1,4 +1,5 @@
 ﻿using MusicService.Api.Contracts;
+using MusicService.Api.Filters;
 using MusicService.Api.Mappings;
 using MusicService.Api.Models;
 using MusicService.Api.Services;
@@ -19,7 +20,7 @@ namespace MusicService.Api.Endpoints
 
             group.MapGet("/", GetSongs);
             group.MapGet("/{id:guid}", GetSong);
-            group.MapPost("/", PostSong);
+            group.MapPost("/", PostSong).AddEndpointFilter<ValidationFilter<SongCreateDto>>();
             group.MapDelete("/{id:guid}", DeleteSong);
 
             return group;
@@ -36,7 +37,6 @@ namespace MusicService.Api.Endpoints
 
         private static async Task<IResult> PostSong(SongCreateDto dto, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger)
         {
-            if (string.IsNullOrWhiteSpace(dto.Title)) return Results.BadRequest($"{nameof(dto.Title)} is required.");
             Song song = dto.ToDomain();
             await catalog.AddAsync(song, ct);
             logger.LogInformation("Song {SongId} added.", song.Id);

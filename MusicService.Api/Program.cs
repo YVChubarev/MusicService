@@ -1,3 +1,4 @@
+using FluentValidation;
 using MusicService.Api.Endpoints;
 using MusicService.Api.Services;
 using MusicService.Api.Services.BackgroundServices;
@@ -11,6 +12,7 @@ builder.Host.UseSerilog((context, loggerConfiguration) =>
 
 builder.Services.AddSingleton<IMusicCatalog, InMemoryMusicCatalog>();
 builder.Services.AddHostedService<CatalogScannerService>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 

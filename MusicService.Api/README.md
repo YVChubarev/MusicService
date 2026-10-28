@@ -80,3 +80,7 @@ Content-Type: application/json
 ### 1.0.2
 
 Перенос эндпоинтов.
+
+### 1.0.3
+
+Создан валидатор для `SongCreateDto`.
