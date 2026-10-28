@@ -47,3 +47,6 @@ DELETE {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-0000000000
 
 ### Удалить песню по ID (несуществующую)
 DELETE {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000000
+
+### Прослушать трек
+GET {{MusicService.Api_HostAddress}}/songs/00000000-0000-0000-0000-000000000001/stream

@@ -22,7 +22,7 @@ namespace MusicService.Api.Services
                 Title = "Song 2",
                 MainArtists = ["Blur"],
                 Genres = ["Rock"],
-                AudioStreamUrl = "https://example.com/Song2.mp3",
+                AudioStreamUrl = "data/audio/Позови меня с собой.mp3",
             };
             id = new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2);
             _songs[id] = new()
@@ -31,7 +31,7 @@ namespace MusicService.Api.Services
                 Title = "Rapsody",
                 MainArtists = ["Queen"],
                 Genres = ["Rock"],
-                AudioStreamUrl = "https://example.com/Rapsody.mp3",
+                AudioStreamUrl = "data/audio/Три полоски.mp3",
             };
         }
 

@@ -24,6 +24,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/songs` | Получить список всех песен | Нет | `200 OK` |
 | `GET` | `/songs/{id}` | Получить песню по ID | Нет | `200 OK`, `404 Not Found` |
+| `GET` | `/songs/{id}/stream` | Получить аудиопоток по ID | filestream audio/mpeg | `200 OK`, `404 Not Found` |
 | `POST` | `/songs` | Добавить новую песню | JSON (SongCreateDto) | `201 Created`, `400 Bad Request` |
 | `DELETE` | `/songs/{id}` | Удалить песню по ID | Нет | `204 No Content`, `404 Not Found` |
 
@@ -84,3 +85,7 @@ Content-Type: application/json
 ### 1.0.3
 
 Создан валидатор для `SongCreateDto`.
+
+### 1.1.0
+
+Реализован `GET /songs/{id}/stream`.

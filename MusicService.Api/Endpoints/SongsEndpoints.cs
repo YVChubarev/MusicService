@@ -20,6 +20,7 @@ namespace MusicService.Api.Endpoints
 
             group.MapGet("/", GetSongs);
             group.MapGet("/{id:guid}", GetSong);
+            group.MapGet("/{id:guid}/stream", GetSongStream);
             group.MapPost("/", PostSong).AddEndpointFilter<ValidationFilter<SongCreateDto>>();
             group.MapDelete("/{id:guid}", DeleteSong);
 
@@ -48,6 +49,17 @@ namespace MusicService.Api.Endpoints
             if (!await catalog.DeleteAsync(id, ct)) return Results.NotFound();
             logger.LogInformation("Song {SongId} deleted.", id);
             return Results.NoContent();
+        }
+
+        private static async Task<IResult> GetSongStream(Guid id, IMusicCatalog catalog, CancellationToken ct, ILogger<Program> logger)
+        {
+            var song = await catalog.GetAsync(id, ct);
+            if (song is null) return Results.NotFound();
+            var result = Results.Stream(File.OpenRead(song.AudioStreamUrl),
+                                        contentType: "audio/mpeg",
+                                        enableRangeProcessing: true // включает поддержку 206 Partial Content
+);
+            return result;
         }
     }
 }
